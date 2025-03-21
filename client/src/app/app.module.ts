@@ -9,13 +9,19 @@ import { MenuComponent } from './components/menu.component';
 import { PlaceOrderComponent } from './components/place-order.component';
 
 import { ConfirmationComponent } from './components/confirmation.component';
+import { AppRoutingModule } from './app-routing.module';
 
 @NgModule({
   declarations: [
-    AppComponent, MenuComponent, PlaceOrderComponent, ConfirmationComponent
+    AppComponent, 
+    MenuComponent, 
+    PlaceOrderComponent, 
+    ConfirmationComponent
   ],
   imports: [
-    BrowserModule, ReactiveFormsModule
+    BrowserModule,
+    AppRoutingModule, 
+    ReactiveFormsModule
   ],
   providers: [ provideHttpClient() ],
   bootstrap: [AppComponent]
