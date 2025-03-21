@@ -1,6 +1,7 @@
 package vttp.batch5.csf.assessment.server.repositories;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.bson.Document;
@@ -11,7 +12,10 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
+import vttp.batch5.csf.assessment.server.models.LineItem;
 import vttp.batch5.csf.assessment.server.models.Menu;
+import vttp.batch5.csf.assessment.server.models.Order;
+import vttp.batch5.csf.assessment.server.models.PaymentDetails;
 
 @Repository
 public class OrdersRepository {
@@ -20,6 +24,7 @@ public class OrdersRepository {
   private MongoTemplate mongoTemplate;
 
   private final String MENUS_COLLECTION = "menus";
+  private final String ORDERS_COLLECTION = "orders";
 
   // Task 2.2
   // You may change the method's signature
@@ -37,16 +42,51 @@ public class OrdersRepository {
     List<Menu> menus = new ArrayList<>();
 
     for (Document d : results) {
-      System.out.println(d.toString());
       menus.add(Menu.fromDoc(d));
     }
 
     return menus;
   }
 
-  // TODO: Task 4
+  // Task 4
   // Write the native MongoDB query for your access methods in the comment below
   //
-  //  Native MongoDB query here
-  
+  /*
+    db.orders.insert({
+      _id: "ORDER_ID",
+      order_id: "ORDER_ID",
+      payment_id: "PAYMENT_ID",
+      username: "USERNAME",
+      total: 0,
+      timestamp: Date(),
+      items: [
+          {id: "ITEM_ID", price: 0.0, quantity: 0}
+      ]
+    }) 
+
+   */
+  public void addOrder(Order order, PaymentDetails paymentDeets) {
+    Document toInsert = new Document();
+
+    toInsert.put("_id", order.getOrderId());
+    toInsert.put("order_id", order.getOrderId());
+    toInsert.put("payment_id", paymentDeets.getPaymentId());
+    toInsert.put("username", order.getUsername());
+    toInsert.put("total", order.getTotalPrice());
+    toInsert.put("timestamp", new Date(paymentDeets.getTimestamp()));
+    
+    List<LineItem> items = order.getItems();
+
+    List<Document> itemsDoc = new ArrayList<>();
+
+    for (LineItem li : items) {
+      itemsDoc.add(li.toDoc());
+    }
+
+    toInsert.put("items", itemsDoc);
+    
+    mongoTemplate.insert(toInsert, ORDERS_COLLECTION);
+
+    System.out.println("Added order to mongo");
+  }
 }

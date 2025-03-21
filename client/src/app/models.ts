@@ -7,3 +7,22 @@ export interface Menu {
     price: number;
     quantity: number;
 }
+
+export interface Order {
+    username: string;
+    password: string;
+    items: LineItem[]
+}
+
+export interface LineItem {
+    id: string;
+    price: number;
+    quantity: number;
+}
+
+export interface PaymentDetails {
+    paymentId: string;
+    orderId: string;
+    total: number;
+    timestamp: number;
+}

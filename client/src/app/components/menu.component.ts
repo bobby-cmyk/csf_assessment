@@ -1,6 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { RestaurantService } from '../restaurant.service';
 import { Menu } from '../models';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-menu',
@@ -12,6 +13,7 @@ export class MenuComponent implements OnInit{
 
   //Task 2
   private restaurantSvc = inject(RestaurantService)
+  private router = inject(Router)
   
   menus!: Menu[]
   totalQuantity: number = 0
@@ -53,5 +55,11 @@ export class MenuComponent implements OnInit{
       console.log("Total price: " + this.totalPrice)
       console.log("Total price: " + this.totalPrice)
     }
+  }
+
+  placeOrder() {
+      let order = this.menus.filter(menu => menu.quantity > 0)
+      localStorage.setItem("order", JSON.stringify(order))
+      this.router.navigate(['/place-order'])
   }
 }
